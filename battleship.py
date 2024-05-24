@@ -23,7 +23,7 @@ def main():
     
 
 def runSimplifiedMode():
-    amountOfShips = 5;
+    amountOfShips = 5
     
     tableWidth = 10
     tableHeight = 5
@@ -39,18 +39,20 @@ def runSimplifiedMode():
 
         printTable(playerPositionsTable)
 
-        coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
+        coordsPrompt = f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (coluna, linha): "
+        coords = getTableCoords(coordsPrompt)
 
         while True:
             if len(coords) != 2:
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
+                coords = getTableCoords(coordsPrompt)
 
             elif ord(coords[0]) not in range(ASCII_CODE_a, ASCII_CODE_a + tableWidth) or int(coords[1]) not in range(1, tableHeight + 1):
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
+                print("Esta posição está fora de alcance. Tente novamente")
+                coords = getTableCoords(coordsPrompt)
 
             elif coords in playerTakenPositions:
                 print("Esta posição já está preenchida. Tente novamente.")
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
+                coords = getTableCoords(coordsPrompt)
             else:
                 playerTakenPositions.append(coords)
                 break
@@ -113,7 +115,7 @@ def printTable(matrix):
 
 def getTableCoords(prompt):
     coords = input(prompt)
-    coords = coords.split(", ")
+    coords = coords.split(",")
 
     coords[0] = coords[0].lower()
 
