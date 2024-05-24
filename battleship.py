@@ -4,6 +4,8 @@ ASCII_CODE_a = ord("a")
 
 
 def main():
+    clearConsole()
+    
     print("*****BATALHA NAVAL*****")
     print("Olá! Escolha qual modo de jogo você deseja jogar:")
     print("1 - Modo Simplificado")
@@ -33,30 +35,27 @@ def runSimplifiedMode():
     playerTakenPositions = []
 
     for i in range(amountOfShips):
-        # clearConsole()
+        clearConsole()
 
         printTable(playerPositionsTable)
-        print(playerTakenPositions)
 
-        coords = getTableCoords(f"Digite as coordenadas para o seu navio {i + 1} de {amountOfShips} (linha, coluna): ")
+        coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
 
         while True:
             if len(coords) != 2:
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio {i + 1} de {amountOfShips} (linha, coluna): ")
+                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
 
             elif ord(coords[0]) not in range(ASCII_CODE_a, ASCII_CODE_a + tableWidth) or int(coords[1]) not in range(1, tableHeight + 1):
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio {i + 1} de {amountOfShips} (linha, coluna): ")
+                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
 
             elif coords in playerTakenPositions:
                 print("Esta posição já está preenchida. Tente novamente.")
-                coords = getTableCoords(f"Digite as coordenadas para o seu navio {i + 1} de {amountOfShips} (linha, coluna): ")
+                coords = getTableCoords(f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (linha, coluna): ")
             else:
                 playerTakenPositions.append(coords)
                 break
         
         tableCoords = [ord(coords[0]) - ASCII_CODE_a, int(coords[1]) - 1]
-
-        print(tableCoords)
 
         playerPositionsTable[tableCoords[1]][tableCoords[0]] = "🚢"
     
@@ -125,7 +124,6 @@ def getTableCoords(prompt):
 def getInt(prompt):
     while True:
         try:
-
             integer = int(input(prompt))
             break
         except ValueError:
