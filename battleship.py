@@ -1,3 +1,4 @@
+import random
 from os import system, name
 
 ASCII_CODE_a = ord("a")
@@ -32,6 +33,12 @@ def runSimplifiedMode():
     playerFeedbackTable = createTable(tableWidth, tableHeight)
     computerPositionsTable = createTable(tableWidth, tableHeight)
 
+
+    #playerMovesToBoard(playerPositionsTable, amountOfShips, tableWidth, tableHeight)
+    computerMovesToBoard(computerPositionsTable, amountOfShips, tableWidth, tableHeight)        
+
+
+def playerMovesToBoard(playerPositionsTable, amountOfShips, tableWidth, tableHeight):
     playerTakenPositions = []
 
     for i in range(amountOfShips):
@@ -61,11 +68,26 @@ def runSimplifiedMode():
 
         playerPositionsTable[tableCoords[1]][tableCoords[0]] = "🚢"
     
+    clearConsole()
     printTable(playerPositionsTable)
-        
 
+
+def computerMovesToBoard(computerPositionsTable, amountOfShips, tableWidth, tableHeight):
+    computerTakenPositions = []
+
+    for i in range(amountOfShips):
+        coords = [random.randint(0, tableWidth - 1), random.randint(0, tableHeight - 1)]
+        print(coords)
+
+        while coords in computerTakenPositions:
+            coords = [random.randint(0, tableWidth - 1), random.randint(0, tableHeight - 1)]
+
+        computerTakenPositions.append(coords)
+
+        computerPositionsTable[coords[1]][coords[0]] = "🚢"
     
-    
+    printTable(computerPositionsTable)
+
 
 def runOriginalMode():
     tableWidth = 10
