@@ -17,14 +17,16 @@ def main():
         gameMode = getInt("Modo: ")
 
     if gameMode == 1:
+
         runSimplifiedMode()
+
     elif gameMode == 2:
+
         runOriginalMode()
     
 
 def runSimplifiedMode():
     amountOfShips = 5
-    
     tableWidth = 10
     tableHeight = 5
 
@@ -32,12 +34,19 @@ def runSimplifiedMode():
     playerFeedbackTable = createTable(tableWidth, tableHeight, "🟦")
     computerPositionsTable = createTable(tableWidth, tableHeight, "🟦")
 
-    inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
+    inputPlayerMoves(playerPositionsTable, amountOfShips, "🚢", tableWidth, tableHeight)
+
+
     randomizeMoves(computerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
+    playerAttackTakenPositions = []
+
+    while True:
+        playerAttack(playerAttackTakenPositions, playerFeedbackTable, tableWidth, tableHeight)
+        computerAttack()
     printTable(playerPositionsTable)
 
 # Preenche a tabela do jogador com inputs do usuário.
-def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeight, fillChar):
+def inputPlayerMoves(playerPositionsTable, amountOfShips, fillChar, tableWidth, tableHeight):
     
     # Vetor para armazenar as posições já tomadas.
     playerTakenPositions = []
@@ -52,32 +61,7 @@ def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeigh
         coords = getTableCoords(coordsPrompt) # Pega as coordenadas introduzidas pelo usuário
         
         # Continua até que o input do usuário seja válido
-        while True:
-            
-            # Menos de 2 eixos nas coordenadas
-            if len(coords) != 2:
-                print("Coordenadas inválidas. Tente novamente.")
-                coords = getTableCoords(coordsPrompt)
-            
-            # Caracteres inválidos
-            elif not (coords[0].isalnum() and coords[1].isnumeric()):
-                print("Coordenadas inválidas. Tente novamente.")
-                coords = getTableCoords(coordsPrompt)
-
-            # Coordenadas fora dos limites
-            elif ord(coords[0]) not in range(ASCII_CODE_a, ASCII_CODE_a + tableWidth) or int(coords[1]) not in range(1, tableHeight + 1):
-                print("Esta posição está fora de alcance. Tente novamente.")
-                coords = getTableCoords(coordsPrompt)
-
-            # Coordenadas já tomadas
-            elif coords in playerTakenPositions:
-                print("Esta posição já está preenchida. Tente novamente.")
-                coords = getTableCoords(coordsPrompt)
-            
-            # Coordenada aceita.
-            else:
-                playerTakenPositions.append(coords)
-                break
+        coords = validateUserInput(coords, coordsPrompt, playerTakenPositions, tableWidth, tableHeight)
         
         xCoord = int(coords[1]) - 1 # Coordenada x transformada para índice x da matriz
         yCoord = ord(coords[0]) - ASCII_CODE_a # Coordenada y transformada para índice y na matrix
@@ -121,6 +105,52 @@ def runOriginalMode():
     playerFeedbackTable = createTable(tableWidth, tableHeight)
     computerPositionsTable = createTable(tableWidth, tableHeight)
 
+
+def playerAttack(playerAttackTakenPositions, playerFeedbackTable, tableWidth, tableHeight):
+
+    attackCoordsPrompt = f"Digite as coordenadas para o seu ataque. formato: (coluna, linha): "
+    attackCoords = getTableCoords(attackCoordsPrompt)
+
+    attackCoords = validateUserInput(attackCoords, attackCoordsPrompt, playerAttackTakenPositions, tableWidth, tableHeight)
+    playerAttackTakenPositions.append(attackCoords)
+
+    xCoord = int(attackCoords[1]) - 1 # Coordenada x transformada para índice x da matriz
+    yCoord = ord(attackCoords[0]) - ASCII_CODE_a # Coordenada y transformada para índice y na matrix
+
+    playerFeedbackTable[xCoord][yCoord] = "💥"
+
+def computerAttack():
+    pass
+
+def validateUserInput(coords, coordsPrompt, playerTakenPositions, tableWidth, tableHeight):
+    while True:
+            
+        # Menos de 2 eixos nas coordenadas
+        if len(coords) != 2:
+            print("Coordenadas inválidas. Tente novamente.")
+            coords = getTableCoords(coordsPrompt)
+        
+        # Caracteres inválidos
+        elif not (coords[0].isalnum() and coords[1].isnumeric()):
+            print("Coordenadas inválidas. Tente novamente.")
+            coords = getTableCoords(coordsPrompt)
+
+        # Coordenadas fora dos limites
+        elif ord(coords[0]) not in range(ASCII_CODE_a, ASCII_CODE_a + tableWidth) or int(coords[1]) not in range(1, tableHeight + 1):
+            print("Esta posição está fora de alcance. Tente novamente.")
+            coords = getTableCoords(coordsPrompt)
+
+        # Coordenadas já tomadas
+        elif coords in playerTakenPositions:
+            print("Esta posição já está preenchida. Tente novamente.")
+            coords = getTableCoords(coordsPrompt)
+        
+        # Coordenada aceita.
+        else:
+            playerTakenPositions.append(coords)
+            break
+
+    return coords
 
 # Limpa o console (compatibilidade entre Windows e Linux)
 def clearConsole():
