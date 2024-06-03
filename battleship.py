@@ -32,12 +32,12 @@ def runSimplifiedMode():
     playerFeedbackTable = createTable(tableWidth, tableHeight, "🟦")
     computerPositionsTable = createTable(tableWidth, tableHeight, "🟦")
 
-    getPlayerMovesFromInput(playerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
+    inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
     randomizeMoves(computerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
     printTable(playerPositionsTable)
 
 # Preenche a tabela do jogador com inputs do usuário.
-def getPlayerMovesFromInput(playerPositionsTable, amountOfShips, tableWidth, tableHeight, fillChar):
+def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeight, fillChar):
     
     # Vetor para armazenar as posições já tomadas.
     playerTakenPositions = []
