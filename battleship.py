@@ -1,8 +1,7 @@
 import random
 from os import system, name
 
-ASCII_CODE_a = ord("a")
-
+ASCII_CODE_a = ord("a") # Valor numérico em ASCII da letra 'a'
 
 def main():
     clearConsole()
@@ -29,64 +28,89 @@ def runSimplifiedMode():
     tableWidth = 10
     tableHeight = 5
 
-    playerPositionsTable = createTable(tableWidth, tableHeight)
-    playerFeedbackTable = createTable(tableWidth, tableHeight)
-    computerPositionsTable = createTable(tableWidth, tableHeight)
+    playerPositionsTable = createTable(tableWidth, tableHeight, "🟦")
+    playerFeedbackTable = createTable(tableWidth, tableHeight, "🟦")
+    computerPositionsTable = createTable(tableWidth, tableHeight, "🟦")
 
+    getPlayerMovesFromInput(playerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
+    randomizeMoves(computerPositionsTable, amountOfShips, tableWidth, tableHeight, "🚢")
+    printTable(playerPositionsTable)
 
-    #playerMovesToBoard(playerPositionsTable, amountOfShips, tableWidth, tableHeight)
-    computerMovesToBoard(computerPositionsTable, amountOfShips, tableWidth, tableHeight)        
-
-
-def playerMovesToBoard(playerPositionsTable, amountOfShips, tableWidth, tableHeight):
+# Preenche a tabela do jogador com inputs do usuário.
+def getPlayerMovesFromInput(playerPositionsTable, amountOfShips, tableWidth, tableHeight, fillChar):
+    
+    # Vetor para armazenar as posições já tomadas.
     playerTakenPositions = []
 
+    # Repete conforme a quantidade de navios determinada
     for i in range(amountOfShips):
         clearConsole()
 
         printTable(playerPositionsTable)
 
         coordsPrompt = f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) formato: (coluna, linha): "
-        coords = getTableCoords(coordsPrompt)
-
+        coords = getTableCoords(coordsPrompt) # Pega as coordenadas introduzidas pelo usuário
+        
+        # Continua até que o input do usuário seja válido
         while True:
+            
+            # Menos de 2 eixos nas coordenadas
             if len(coords) != 2:
+                print("Coordenadas inválidas. Tente novamente.")
+                coords = getTableCoords(coordsPrompt)
+            
+            # Caracteres inválidos
+            elif not (coords[0].isalnum() and coords[1].isnumeric()):
+                print("Coordenadas inválidas. Tente novamente.")
                 coords = getTableCoords(coordsPrompt)
 
+            # Coordenadas fora dos limites
             elif ord(coords[0]) not in range(ASCII_CODE_a, ASCII_CODE_a + tableWidth) or int(coords[1]) not in range(1, tableHeight + 1):
-                print("Esta posição está fora de alcance. Tente novamente")
+                print("Esta posição está fora de alcance. Tente novamente.")
                 coords = getTableCoords(coordsPrompt)
 
+            # Coordenadas já tomadas
             elif coords in playerTakenPositions:
                 print("Esta posição já está preenchida. Tente novamente.")
                 coords = getTableCoords(coordsPrompt)
+            
+            # Coordenada aceita.
             else:
                 playerTakenPositions.append(coords)
                 break
         
-        tableCoords = [ord(coords[0]) - ASCII_CODE_a, int(coords[1]) - 1]
+        xCoord = int(coords[1]) - 1 # Coordenada x transformada para índice x da matriz
+        yCoord = ord(coords[0]) - ASCII_CODE_a # Coordenada y transformada para índice y na matrix
 
-        playerPositionsTable[tableCoords[1]][tableCoords[0]] = "🚢"
+        # Insere na posição o navio/caracter
+        playerPositionsTable[xCoord][yCoord] = fillChar
     
     clearConsole()
-    printTable(playerPositionsTable)
 
-
-def computerMovesToBoard(computerPositionsTable, amountOfShips, tableWidth, tableHeight):
+# Randomiza as jogadas do computador, preenchendo a sua tabela com 
+def randomizeMoves(computerPositionsTable, amountOfShips, tableWidth, tableHeight, fillChar):
+    
+    # Vetor para armazenar as posições já tomadas.
     computerTakenPositions = []
 
+    # Repete conforme a quantidade de navios determinada
     for i in range(amountOfShips):
-        coords = [random.randint(0, tableWidth - 1), random.randint(0, tableHeight - 1)]
-        print(coords)
 
+        # Randomiza as coordenadas
+        coords = [random.randint(0, tableHeight - 1), random.randint(0, tableWidth - 1)]
+
+        # Repete até que as coordenadas não sejam repetidas.
         while coords in computerTakenPositions:
-            coords = [random.randint(0, tableWidth - 1), random.randint(0, tableHeight - 1)]
+            coords = [random.randint(0, tableHeight - 1), random.randint(0, tableWidth - 1)]
 
+        # Adiciona coordenada no vetor de posições tomadas.
         computerTakenPositions.append(coords)
 
-        computerPositionsTable[coords[1]][coords[0]] = "🚢"
-    
-    printTable(computerPositionsTable)
+        x = coords[0]
+        y = coords[1]
+
+        # Insere navio/caracter na coordenada.
+        computerPositionsTable[x][y] = fillChar
 
 
 def runOriginalMode():
@@ -98,23 +122,25 @@ def runOriginalMode():
     computerPositionsTable = createTable(tableWidth, tableHeight)
 
 
-
-
-
-
+# Limpa o console (compatibilidade entre Windows e Linux)
 def clearConsole():
     system("cls" if name == "nt" else "clear")
 
-def createTable(width, height):
+
+# Cria uma tabela em forma de matriz, conforme altura,
+# largura e caracter de preenchimento
+def createTable(width, height, fillChar):
     table = []
     for row in range(height):
         table.append([])
         for col in range(width):
-            table[row].append("🟦")
+            table[row].append(fillChar)
             
     return table
 
 
+# Imprime uma tabela com as coordenadas a partir de uma matriz
+# com formatação.
 def printTable(matrix):
     print()
     print("    ", end="")
@@ -122,7 +148,6 @@ def printTable(matrix):
         print(chr(i), end="  ")
     print()
  
-
     for i, row in enumerate(matrix):
         if len(str(i + 1)) < 2:
             print(f" {i + 1} ", end="")
@@ -135,10 +160,12 @@ def printTable(matrix):
     
     print()
 
+# Pega coordenadas no formato x, y do usuário de forma
+# sanitizada.
 def getTableCoords(prompt):
     coords = input(prompt)
+    coords = coords.replace(" ", "")
     coords = coords.split(",")
-
     coords[0] = coords[0].lower()
 
     return coords
