@@ -11,7 +11,13 @@ MISSED_ATTACK_VALUE = 3
 def main():
     clearConsole()
     
-    print("*****BATALHA NAVAL*****")
+    print("                __/___            ")
+    print("          _____/______|           ")
+    print("  _______/_____\_______\_____     ")
+    print("  \              < < <       |    ")
+    print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+
+    print("*****BATALHA NAVAL*****\n")
     print("Olá! Escolha qual modo de jogo você deseja jogar:")
     print("1 - Modo Simplificado")
     print("2 - Modo Original")
@@ -216,7 +222,15 @@ def inputTableCoords(prompt):
             coords = coords.replace(" ", "")
             coords = coords.split(",")
             coords[0] = coords[0].lower()
-        
+
+        # Dois caracteres
+        elif len(coords[0]) != 1:
+            print("Coordenadas inválidas. Tente novamente.")
+            coords = input(prompt)
+            coords = coords.replace(" ", "")
+            coords = coords.split(",")
+            coords[0] = coords[0].lower()
+
         # Coordenada aceita.
         else:
             break
