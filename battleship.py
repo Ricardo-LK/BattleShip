@@ -64,6 +64,16 @@ def runSimplifiedMode():
         x = playerAttackIndexes[0]
         y = playerAttackIndexes[1]
 
+        while x > tableHeight - 1 or y > tableWidth - 1:
+            print("Coordenada inválida. Tente novamente.")
+
+            playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
+            playerAttackIndexes = tableCoordsToIndexes(playerAttackCoords)
+
+            x = playerAttackIndexes[0]
+            y = playerAttackIndexes[1]
+        
+
         if computerShipsPositionsTable[x][y] == HAS_SHIP_VALUE:
             computerAttacksTable[x][y] = DESTROYED_SHIP_VALUE
         elif computerShipsPositionsTable[x][y] == EMPTY_VALUE:
