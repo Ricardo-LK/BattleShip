@@ -42,21 +42,30 @@ def runSimplifiedMode():
     playerShipsPositionsTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
     computerShipsPositionsTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
 
-    playerAttacksTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
-    computerAttacksTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
+    playerTargetTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
+    computerTargetTable = createTable(tableWidth, tableHeight, EMPTY_VALUE)
 
     inputPlayerMoves(playerShipsPositionsTable, amountOfShips, tableWidth, tableHeight, HAS_SHIP_VALUE)
     randomizeMoves(computerShipsPositionsTable, amountOfShips, tableWidth, tableHeight, HAS_SHIP_VALUE)
+
+    playerRemainingShips = amountOfShips
+    computerRemaininShips = amountOfShips
 
     winner = False
 
     while not winner:
 
+        print("_______________________________________________\n")
         print("***TABULEIRO DO COMPUTADOR***")
-        printTable(computerAttacksTable, "🟦", "", "💥", "❌")
+        printTable(computerTargetTable, "🟦", "", "💥", "❌")
+        print(f"Embarcações restantes: {computerRemaininShips}\n")
+        print("_______________________________________________\n")
+
         
         print("***TABULEIRO DO JOGADOR***")
-        printTable(playerAttacksTable, "🟦", "", "💥", "❌")
+        printTable(playerShipsPositionsTable, "🟦", "🚢", "💥", "❌")
+        print(f"Embarcações restantes: {playerRemainingShips}\n")
+        print("_______________________________________________\n")
 
         playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
         playerAttackIndexes = tableCoordsToIndexes(playerAttackCoords)
@@ -64,20 +73,33 @@ def runSimplifiedMode():
         x = playerAttackIndexes[0]
         y = playerAttackIndexes[1]
 
-        while x > tableHeight - 1 or y > tableWidth - 1:
-            print("Coordenada inválida. Tente novamente.")
+        while True:
+            if x > tableHeight - 1 or y > tableWidth - 1:
+                print("Coordenada fora de alcance. Tente novamente.")
 
-            playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
-            playerAttackIndexes = tableCoordsToIndexes(playerAttackCoords)
+                playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
+                playerAttackIndexes = tableCoordsToIndexes(playerAttackCoords)
 
-            x = playerAttackIndexes[0]
-            y = playerAttackIndexes[1]
-        
+                x = playerAttackIndexes[0]
+                y = playerAttackIndexes[1]
+
+            elif computerTargetTable[x][y] != EMPTY_VALUE:
+                print("Esta coordenada já foi utilizada. Tente novamente.")
+
+                playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
+                playerAttackIndexes = tableCoordsToIndexes(playerAttackCoords)
+
+                x = playerAttackIndexes[0]
+                y = playerAttackIndexes[1]
+            else:
+                break
 
         if computerShipsPositionsTable[x][y] == HAS_SHIP_VALUE:
-            computerAttacksTable[x][y] = DESTROYED_SHIP_VALUE
+            computerTargetTable[x][y] = DESTROYED_SHIP_VALUE
+            computerRemaininShips -= 1
         elif computerShipsPositionsTable[x][y] == EMPTY_VALUE:
-            computerAttacksTable[x][y] = MISSED_ATTACK_VALUE
+            computerTargetTable[x][y] = MISSED_ATTACK_VALUE
+
         
         clearConsole()
 
