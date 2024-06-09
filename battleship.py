@@ -21,9 +21,9 @@ def main():
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 
     print("*****BATALHA NAVAL*****\n")
-    print("Olá! Escolha qual modo de jogo você deseja jogar:")
-    print("1 - Modo Simplificado")
-    print("2 - Modo Original")
+    print("Olá! Pressione enter para continuar!")
+    
+    _ = input("")
 
     runSimplifiedMode()
 
@@ -190,6 +190,7 @@ def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeigh
                 coords = inputTableCoords(coordsPrompt)
                 indexes = tableCoordsToIndexes(coords)
             
+            # Coordenadas fora de alcance
             elif indexes[0] > tableHeight - 1 or indexes[0] > tableWidth - 1:
                 print("Esta posição está fora de alcance. Tente novamente.")
                 coords = inputTableCoords(coordsPrompt)
@@ -213,7 +214,7 @@ def randomizeMoves(computerPositionsTable, amountOfShips, tableWidth, tableHeigh
     computerTakenPositions = []
 
     # Repete conforme a quantidade de navios determinada
-    for i in range(amountOfShips):
+    for _ in range(amountOfShips):
 
         # Randomiza as coordenadas
         coords = [random.randint(0, tableHeight - 1), random.randint(0, tableWidth - 1)]
@@ -258,7 +259,8 @@ def printTable(matrix, empty_char, fill_char = "", destroyed_ship_char = "", mis
     # Imprime os indicadores de posição do topo
     print()
     print("    ", end="")
-    for i in range(ASCII_CODE_a, ASCII_CODE_a + (len(matrix[0]))):
+    matrixWidth = len(matrix[0])
+    for i in range(ASCII_CODE_a, ASCII_CODE_a + matrixWidth):
         print(chr(i), end="  ")
     print()
  
@@ -333,17 +335,6 @@ def tableCoordsToIndexes(coords):
 
     return [xIndex, yIndex]
 
-
-#RENAN
-# Função para pegar input do usuário de forma segura.
-def getInt(prompt):
-    while True:
-        try:
-            integer = int(input(prompt))
-            break
-        except ValueError:
-            pass
-    return integer
 
 #RICARDO
 main()
