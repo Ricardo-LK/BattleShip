@@ -175,7 +175,7 @@ def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeigh
     for i in range(amountOfShips):
         clearConsole()
 
-        printTable(playerPositionsTable, "🟦", fill)
+        printTable(playerPositionsTable, "🟦", "🚢")
 
         coordsPrompt = f"Digite as coordenadas para o seu navio ({i + 1} de {amountOfShips}) ex: (a, 3): "
         coords = inputTableCoords(coordsPrompt) # Pega as coordenadas introduzidas pelo usuário
