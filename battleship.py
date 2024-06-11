@@ -71,7 +71,7 @@ def runSimplifiedMode():
         y = playerAttackIndexes[1]
 
         while True:
-            if x > tableHeight - 1 or y > tableWidth - 1:
+            if x > tableHeight - 1 or y > tableWidth - 1 or int(playerAttackCoords[1]) < 1:
                 print("Coordenada fora de alcance. Tente novamente.")
 
                 playerAttackCoords = inputTableCoords("(JOGADOR) insira a posição para atacar (ex: a, 3): ")
@@ -79,6 +79,7 @@ def runSimplifiedMode():
 
                 x = playerAttackIndexes[0]
                 y = playerAttackIndexes[1]
+            
 
             elif computerTargetTable[x][y] != EMPTY_VALUE:
                 print("Esta coordenada já foi utilizada. Tente novamente.")
@@ -191,11 +192,17 @@ def inputPlayerMoves(playerPositionsTable, amountOfShips, tableWidth, tableHeigh
                 indexes = tableCoordsToIndexes(coords)
             
             # Coordenadas fora de alcance
-            elif indexes[0] > tableHeight - 1 or indexes[0] > tableWidth - 1:
+            elif indexes[0] > tableHeight - 1 or indexes[1] > tableWidth - 1 or indexes[0] < 0 or indexes[1] < 0:
                 print("Esta posição está fora de alcance. Tente novamente.")
                 coords = inputTableCoords(coordsPrompt)
                 indexes = tableCoordsToIndexes(coords)
             
+            # Coordenada y menor que 1
+            elif int(coords[1]) < 1:    
+                print("Coordenadas negativas. Tente novamente.")
+                coords = inputTableCoords(coordsPrompt)
+                indexes = tableCoordsToIndexes(coords)
+    
             # Coordenada aceita.
             else:
                 playerTakenPositions.append(indexes)
@@ -330,11 +337,11 @@ def inputTableCoords(prompt):
 #RENAN
 # Transforma coordenadas no formato (letra, numero) para índices da matrix
 def tableCoordsToIndexes(coords):
-    xIndex = int(coords[1]) - 1 # Coordenada x transformada para índice x da matriz
-    yIndex = ord(coords[0]) - ASCII_CODE_a # Coordenada y transformada para índice y na matrix
+    row = int(coords[1]) - 1 # Coordenada x transformada para linha na matrix
+    col = ord(coords[0]) - ASCII_CODE_a # Coordenada y transformada para índice coluna da matriz
 
-    return [xIndex, yIndex]
+    return [row, col]
 
 
-#RICARDO
-main()
+if __name__ == "__main__":
+    main()
