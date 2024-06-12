@@ -46,16 +46,22 @@ def runSimplifiedMode():
     randomizeMoves(computerShipsPositionsTable, amountOfShips, tableWidth, tableHeight, HAS_SHIP_VALUE)
 
     playerRemainingShips = amountOfShips
-    computerRemaininShips = amountOfShips
+    computerRemainingShips = amountOfShips
+
+    playerPreviousShips = amountOfShips
+    computerPreviousShips = amountOfShips
 
     hasWinner = False
     winner = "NONE"
 
     while not hasWinner:
+        playerPreviousShips = playerRemainingShips
+        computerPreviousShips = computerRemainingShips
+
         print("_______________________________________________\n")
         print("***TABULEIRO DO COMPUTADOR***")
         printTable(computerTargetTable, "🟦", "🚢", "💥", "❌")
-        print(f"Embarcações restantes: {computerRemaininShips}\n")
+        print(f"Embarcações restantes: {computerRemainingShips}\n")
         print("_______________________________________________\n")
 
 
@@ -94,11 +100,11 @@ def runSimplifiedMode():
         
         if computerShipsPositionsTable[x][y] == HAS_SHIP_VALUE:
             computerTargetTable[x][y] = DESTROYED_SHIP_VALUE
-            computerRemaininShips -= 1
+            computerRemainingShips -= 1
         elif computerShipsPositionsTable[x][y] == EMPTY_VALUE:
             computerTargetTable[x][y] = MISSED_ATTACK_VALUE
 
-        if computerRemaininShips == 0:
+        if computerRemainingShips == 0:
             hasWinner = True
             winner = "PLAYER"
             break
@@ -131,6 +137,18 @@ def runSimplifiedMode():
             winner = "COMPUTER"
             break
 
+        if computerRemainingShips < computerPreviousShips:
+            print("\nO JOGADOR FEZ UM ACERTO!", flush=True)
+        else:
+            print("\nO JOGADOR NÃO REALIZOU NENHUM ACERTO.", flush=True)
+
+        if playerRemainingShips < playerPreviousShips:
+            print("\nO COMPUTADOR FEZ UM ACERTO!", flush=True)
+        else:
+            print("\nO COMPUTADOR NÃO REALIZOU NENHUM ACERTO.", flush=True)
+       
+        time.sleep(2)
+
         clearConsole()
     
     clearConsole()
@@ -148,7 +166,7 @@ def runSimplifiedMode():
     print("_______________________________________________\n")
     print("***TABULEIRO DO COMPUTADOR***")
     printTable(computerTargetTable, "🟦", "🚢", "💥", "❌")
-    print(f"Embarcações restantes: {computerRemaininShips}\n")
+    print(f"Embarcações restantes: {computerRemainingShips}\n")
     print("_______________________________________________\n")
 
     
